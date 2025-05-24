@@ -1,5 +1,6 @@
-// @Date    : 2020-09-12 16:26:48
-// @Author  : residuallaugh
+// @Date    : 2025-05-25 12:00:00
+// @Author  : residuallaugh / M1r0ku
+
 (function(){
     var protocol = window.location.protocol;
     var host = window.location.host;
@@ -143,87 +144,234 @@
 })()
 
 
+/*   全局悬浮窗样式   */
+
 chrome.storage.local.get(["global_float"], function(settings){
-    // console.log(settings);
     if (settings["global_float"]!=true){
         return
     }
-    // console.log(settings["global_float"]);
-    // console.log("findsomething-divglobal_float");
-    // 使用自定义标签
+
     const body = document.getElementsByTagName('html')[0];
     const div = document.createElement('div');
     div.setAttribute("id","findsomething-float-div");
+
+    // All styling moved inline or to the embedded <style> tag
     div.innerHTML = `
-    <findsomething-div id="findsomething_neko" style="width:410px;max-height:500px;font-size:14px;color:#000000;box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1) ;background-color: #fff;border-radius: 5px;border: 1px solid #ebebeb;left:20px;top:20px;position: fixed;z-index: 1000000;overflow:scroll;">
-          <findsomething-div id="findsomething_neko-title" style="display: flex;justify-content: space-between;">
-            <findsomething-div id="findsomething_taskstatus" style="height: 34px; line-height: 34px; margin-left: 10px;"></findsomething-div>
-            <findsomething-div style="cursor: pointer;margin-top: 2px;margin-right: 10px;" onclick='(function(){document.getElementById("findsomething-float-div").removeChild(document.getElementById("neko"));})()'>隐藏</findsomething-div>
-          </findsomething-div>
-            <findsomething-div style="width: 300px; margin-top: 10px;">
-                <findsomething-div class="findsomething-title">IP<button type="button" class="finsomething_copy" name="ip">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_ip" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
-                <findsomething-div class="findsomething-title">IP_PORT<button class="findsomething_copy" name="ip_port">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_ip_port" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
-                <findsomething-div class="findsomething-title">域名<button class="findsomething_copy" name="domain">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_domain" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
-                <findsomething-div class="findsomething-title">身份证<button class="findsomething_copy" name="sfz">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_sfz" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
-                <findsomething-div class="findsomething-title">手机号<button class="findsomething_copy" name="mobile">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_mobile" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
-                <findsomething-div class="findsomething-title">邮箱<button class="findsomething_copy" name="mail">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_mail" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
-                <findsomething-div class="findsomething-title">JWT<button class="findsomething_copy" name="jwt">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_jwt" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
-                <findsomething-div class="findsomething-title">算法<button class="findsomething_copy" name="algorithm">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_algorithm" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
-                <findsomething-div class="findsomething-title">Secret<button class="findsomething_copy" name="secret">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_secret" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
+    <findsomething-div id="findsomething_neko" style="
+        width:410px;
+        max-height:500px;
+        font-size:14px;
+        color:#343a40; /* Darker text for readability */
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2); /* Deeper, softer shadow */
+        background-color: #ffffff; /* Clean white background */
+        border-radius: 12px; /* Nicer rounded corners */
+        border: 1px solid #e0e0e0; /* Subtle light gray border */
+        left:20px;
+        top:20px;
+        position: fixed;
+        z-index: 1000000;
+        overflow-y:auto; /* Use overflow-y for vertical scrolling */
+        overflow-x:hidden; /* Hide horizontal scroll if not needed */
+        display: flex; /* Use flexbox for internal layout */
+        flex-direction: column; /* Stack items vertically */
+        font-family: 'Roboto', sans-serif; /* Consistent font */
+        padding-bottom: 10px; /* Add some padding at the bottom */
+    ">
+        <findsomething-div id="findsomething_neko-title" style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Vertically align items */
+            padding: 10px 15px; /* Padding for the header */
+            background-color: #f8f9fa; /* Light grey background for header */
+            border-bottom: 1px solid #e9ecef; /* Subtle separator line */
+            border-top-left-radius: 11px; /* Match main border-radius - 1px */
+            border-top-right-radius: 11px; /* Match main border-radius - 1px */
+            flex-shrink: 0; /* Prevent header from shrinking */
+        ">
+            <findsomething-div id="findsomething_taskstatus" style="
+                height: 34px;
+                line-height: 34px;
+                margin-left: 0px; /* Remove redundant margin-left if padding handles it */
+                font-weight: 500; /* Medium bold for status */
+                color: #555; /* Softer color for status text */
+                font-size: 15px;
+            "></findsomething-div>
+            <findsomething-div style="
+                cursor: pointer;
+                margin-top: 0px; /* Adjust top margin for better alignment */
+                margin-right: 0px; /* Adjust right margin for better alignment */
+                font-size: 14px;
+                color: #6c757d; /* Muted gray for elegance */
+                padding: 5px 10px; /* Padding for click area */
+                border-radius: 5px; /* Slightly rounded button */
+                transition: background-color 0.2s ease, color 0.2s ease;
+            " onclick='(function(){document.getElementById("findsomething-float-div").removeChild(document.getElementById("findsomething_neko"));})()'>隐藏</findsomething-div>
+        </findsomething-div>
+
+        <findsomething-div style="
+            width: auto; /* Let content fill available width */
+            margin-top: 15px; /* More space from header */
+            padding: 0 15px; /* Padding on sides for content */
+            flex-grow: 1; /* Allow content area to grow */
+            overflow-y: auto; /* Enable scroll if content is too long */
+            box-sizing: border-box; /* Include padding in width */
+        ">
+            <findsomething-div class="findsomething-item-group">
                 <findsomething-div class="findsomething-title">Path<button class="findsomething_copy" name="path">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_path" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
-                <findsomething-div class="findsomething-title">IncompletePath<button class="findsomething_copy" name="incomplete_path">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_incomplete_path" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
-                <findsomething-div class="findsomething-title">Url<button class="findsomething_copy" name="url">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_url" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
-                <findsomething-div class="findsomething-title">StaticUrl<button class="findsomething_copy" name="static">复制</button></findsomething-div>
-                <findsomething-p id="findsomething_static" style="word-break:break-word;margin-left:10px;">🈚️</findsomething-p>
+                <findsomething-p id="findsomething_path">🈚️</findsomething-p>
             </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">IP<button type="button" class="findsomething_copy" name="ip">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_ip">🈚️</findsomething-p>
+            </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">IP & PORT<button class="findsomething_copy" name="ip_port">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_ip_port">🈚️</findsomething-p>
+            </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">域名<button class="findsomething_copy" name="domain">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_domain">🈚️</findsomething-p>
+            </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">身份证<button class="findsomething_copy" name="sfz">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_sfz">🈚️</findsomething-p>
+            </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">手机号<button class="findsomething_copy" name="mobile">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_mobile">🈚️</findsomething-p>
+            </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">邮箱<button class="findsomething_copy" name="mail">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_mail">🈚️</findsomething-p>
+            </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">JWT<button class="findsomething_copy" name="jwt">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_jwt">🈚️</findsomething-p>
+            </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">算法<button class="findsomething_copy" name="algorithm">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_algorithm">🈚️</findsomething-p>
+            </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">敏感信息<button class="findsomething_copy" name="secret">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_secret">🈚️</findsomething-p>
+            </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">残缺路径<button class="findsomething_copy" name="incomplete_path">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_incomplete_path">🈚️</findsomething-p>
+            </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">URL<button class="findsomething_copy" name="url">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_url">🈚️</findsomething-p>
+            </findsomething-div>
+
+            <findsomething-div class="findsomething-item-group">
+                <findsomething-div class="findsomething-title">静态资源<button class="findsomething_copy" name="static">复制</button></findsomething-div>
+                <findsomething-p id="findsomething_static">🈚️</findsomething-p>
+            </findsomething-div>
+        </findsomething-div>
     </findsomething-div>
-        <style type="text/css">
-        .findsomething_copy {
-            border-style: none;
-            background-color: #ffffff;
-            float: right;
-            margin-right: 0px;
-            font-size: 14px;
-        }
-        findsomething-div{
+    <style type="text/css">
+        /* Custom tags need to be block-level */
+        findsomething-div {
             display: block;
         }
         findsomething-p {
             display: block;
-            margin-top: 14px;
-            margin-bottom: 14px;
-            line-height: 14px;
+            margin-top: 8px; /* Reduced top margin */
+            margin-bottom: 8px; /* Reduced bottom margin */
+            line-height: 1.5; /* Better readability for paragraphs */
+            word-break: break-word; /* Ensure long words break */
+            padding-left: 10px; /* Indent content slightly */
+            color: #495057; /* Softer text color for content */
         }
+
+        /* Grouping for each item (Title + Paragraph) */
+        .findsomething-item-group {
+            margin-bottom: 15px; /* Space between different data items */
+        }
+        .findsomething-item-group:last-child {
+            margin-bottom: 0; /* No margin after the last item */
+        }
+
 
         .findsomething-title {
-            font-size: 16px;
-            font-weight: bold;
-            border-left: 4px solid black;
-            text-indent: 4px;
-            height: 16px;
-            line-height: 16px;
+            font-size: 15px; /* Slightly adjusted font size */
+            font-weight: 700; /* Bolder titles */
+            border-left: 4px solid #007bff; /* Blue border for titles */
+            text-indent: 8px; /* More indent for text */
+            height: auto; /* Let height adjust to content */
+            line-height: 1.2; /* Tighter line height for titles */
             width: 100%;
-            margin-left: 10px;
+            margin-left: 0px; /* Remove margin-left as padding handles it */
+            color: #343a40; /* Darker title color */
+            padding: 2px 0; /* Small vertical padding for titles */
+            display: flex; /* Use flex to align title and button */
+            align-items: center; /* Vertically center content */
+            justify-content: space-between; /* Push button to the right */
+        }
+        
+        /* Copy button style */
+        .findsomething_copy {
+            border-style: none;
+            background-color: #007bff; /* Blue background for copy buttons */
+            color: #ffffff; /* White text */
+            padding: 4px 10px; /* Padding for button */
+            border-radius: 4px; /* Rounded corners for buttons */
+            cursor: pointer;
+            font-size: 12px; /* Smaller font for button text */
+            transition: background-color 0.2s ease, transform 0.1s ease; /* Smooth transition */
+            flex-shrink: 0; /* Prevent button from shrinking */
+            margin-right: 5px; /* Small margin from right edge */
         }
 
-        button{
-            cursor: pointer
+        .findsomething_copy:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            transform: translateY(-1px); /* Slight lift on hover */
         }
-        </style>
-        `
+
+        .findsomething_copy:active {
+            transform: translateY(0); /* Press effect */
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* Scrollbar styling for WebKit browsers */
+        #findsomething_neko::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #findsomething_neko::-webkit-scrollbar-track {
+            background: #f0f2f5; /* Light track background */
+            border-radius: 4px;
+        }
+
+        #findsomething_neko::-webkit-scrollbar-thumb {
+            background-color: #c0c0c0; /* Gray thumb */
+            border-radius: 4px;
+            border: 2px solid #f0f2f5; /* Border to create visual space */
+        }
+
+        #findsomething_neko::-webkit-scrollbar-thumb:hover {
+            background-color: #a0a0a0; /* Darker gray on hover */
+        }
+    </style>
+    `
     body.appendChild(div)
+    
     var neko = document.querySelector('#findsomething_neko');
     var nekoW = neko.offsetWidth;
     var nekoH = neko.offsetHeight;

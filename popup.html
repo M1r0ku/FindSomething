@@ -1,84 +1,480 @@
 <!--  
-@Date    : 2020-09-12 16:26:48
-@Author  : residuallaugh 
+@Date    : 2025-05-25 12:00:00
+@Author  : residuallaugh / M1r0ku
 -->
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">    
+    <meta charset="UTF-8">
+    <title>FindSomething</title>
+    <style type="text/css">
+        body {
+            width: 790px;
+            height: 400px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #343a40;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Left Sidebar - Navigation Card List */
+        .left-panel {
+            width: 150px; /* Fixed width for the left panel */
+            background-color: #ffffff;
+            box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+            height: 100%;
+            box-sizing: border-box;
+            border-bottom: none;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 0 15px;
+        }
+
+        .category-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .category-item {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .category-item a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #555;
+            font-size: 15px;
+            font-weight: 400;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .category-item a:hover {
+            background-color: #e9ecef;
+            color: #007bff;
+        }
+
+        .category-item a.active {
+            background-color: #e0f2ff;
+            color: #007bff;
+            border-left-color: #007bff;
+            font-weight: 500;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            width: 640px;
+            flex-grow: 0;
+            padding: 20px;
+            overflow-y: auto;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        #taskstatus {
+            font-size: 15px;
+            font-weight: 500;
+            color: #6c757d;
+            margin-bottom: 20px;
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        /* Card Layout for each section (right panel) */
+        .info-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .info-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.2s ease;
+        }
+
+        .info-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .info-card-content {
+            padding: 12px 18px;
+            display: block;
+            border-top: 1px solid #f2f2f2;
+        }
+
+        .content-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .data-display {
+            word-break: break-word;
+            background-color: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+            min-height: 50px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            color: #495057;
+            line-height: 1.4;
+            border: 1px solid #e9ecef;
+            font-size: 13px;
+        }
+
+        .data-display.no-data {
+            color: #999;
+            font-style: normal;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-button {
+            border: none;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+
+        .copy-button:active {
+            background-color: #004085;
+            transform: translateY(1px);
+        }
+
+        .copy-button#popupCopyurl {
+            background-color: #28a745;
+            margin-left: 6px;
+        }
+
+        .copy-button#popupCopyurl:hover {
+            background-color: #218838;
+        }
+
+        .copy-button#popupCopyurl:active {
+            background-color: #1e7e34;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        a:hover .tips {
+            border-color: #d64d00;
+        }
+
+        #info-cards-container {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        #settings-content {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            height: calc(100% - 40px);
+            box-sizing: border-box;
+            display: none; /* Hidden by default, shown when '配置' is active via JS for this page */
+        }
+        #settings-content h3 {
+            margin-top: 0;
+            color: #343a40;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        #settings-content label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        #settings-content input[type="text"],
+        #settings-content input[type="number"],
+        #settings-content textarea {
+            width: calc(100% - 24px);
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        #settings-content textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        #settings-content button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background-color 0.3s ease;
+        }
+        #settings-content button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
-<body style="width:780px; font-size: 14px;">
-    <div style="width:780px; height: 30px; margin-left: 15px;">
-        <a href="popup.html"><div id="Zhuye" style="width: 55px; height: 28px; float: left; text-align: center; line-height: 28px; font-size: 14px; background: #000000; color: #ffffff; border: 1px solid black;border-radius: 2px 0px 0px 2px;">主页</div></a>
-        <a href="settings.html"><div id="Peizhi" style="width: 55px; height: 28px; float: left; text-align: center; line-height: 28px; font-size: 14px; background: #ffffff; color: #000000; border: 1px solid black;border-radius: 0px 2px 2px 0px;">配置</div></a>
+<body>
+    <div class="left-panel">
+        <div class="panel-title">信息收集</div>
+        <ul class="category-list">
+            <li class="category-item"><a href="#" data-category="path" class="active">Path</a></li>
+            <li class="category-item"><a href="#" data-category="domain">域名</a></li>
+            <li class="category-item"><a href="#" data-category="url">URL</a></li>
+            <li class="category-item"><a href="#" data-category="ip">IP</a></li>
+            <li class="category-item"><a href="#" data-category="ip_port">IP & Port</a></li>
+            <li class="category-item"><a href="#" data-category="incomplete_path">残缺路径</a></li>
+            <li class="category-item"><a href="#" data-category="static">静态资源</a></li>
+            <li class="category-item"><a href="#" data-category="sfz">身份证</a></li>
+            <li class="category-item"><a href="#" data-category="mobile">手机号</a></li>
+            <li class="category-item"><a href="#" data-category="mail">邮箱</a></li>
+            <li class="category-item"><a href="#" data-category="jwt">JWT</a></li>
+            <li class="category-item"><a href="#" data-category="algorithm">算法</a></li>
+            <li class="category-item"><a href="#" data-category="secret">敏感信息</a></li>
+            <li class="category-item"><a href="settings.html" id="Peizhi">配置</a></li>
+        </ul>
     </div>
-    <div style="width:780px; height: 800px; margin-left: 15px;">
-        <div id="taskstatus" style="height: 34px; line-height: 34px;"></div>
-        <div style="width: 256px; float: left; border-right: 1px solid #e8e8e8;">
-            <div class="findsomething_title" id="popupIp">IP</div><button type="button" class="copy" name="ip">复制</button>
-            <p id="ip" style="word-break:break-word;">🈚️</p>
-            <div class="findsomething_title" id="popupIpPort">IP_PORT</div><button class="copy" name="ip_port">复制</button>
-            <p id="ip_port" style="word-break:break-word;">🈚️</p>
-            <div class="findsomething_title" id="popupDomain">域名</div><button class="copy" name="domain">复制</button>
-            <p id="domain" style="word-break:break-word;">🈚️</p>
-            <div class="findsomething_title" id="popupSfz">身份证</div><button class="copy" name="sfz">复制</button>
-            <p id="sfz" style="">🈚️</p>
-            <div class="findsomething_title" id="popupMobile">手机号</div><button class="copy" name="mobile">复制</button>
-            <p id="mobile" style="">🈚️</p>
-            <div class="findsomething_title" id="popupMail">邮箱</div><button class="copy" name="mail">复制</button>
-            <p id="mail" style="">🈚️</p>
-            <div class="findsomething_title" id="popupJwt">JWT<button class="copy" name="jwt">复制</button></div>
-            <p id="jwt" style="word-break:break-word;">🈚️</p>
-            <div class="findsomething_title" id="popupAlgorithm">算法</div><button class="copy" name="algorithm">复制</button>
-            <p id="algorithm" style="">🈚️</p>
-            <div class="findsomething_title" id="popupSecret">Secret</div><button class="copy" name="secret">复制</button>
-            <p id="secret" style="">🈚️</p>
+
+    <div class="main-content">
+        <div id="taskstatus"></div>
+
+        <div id="info-cards-container">
+            <div class="info-card" id="card-path">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupPath">Path</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>Relative Path</span>
+                        <div>
+                            <button id="path_button" class="copy-button" name="path">复制</button>
+                            <button id="popupCopyurl" class="copy-button" name="path">复制URL</button>
+                        </div>
+                    </div>
+                    <p id="path" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-domain">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupDomain">域名</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>Domain Name</span>
+                        <button class="copy-button" name="domain">复制</button>
+                    </div>
+                    <p id="domain" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-url">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupUrl">Url</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>Full URL</span>
+                        <button class="copy-button" name="url">复制</button>
+                    </div>
+                    <p id="url" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-ip">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupIp">IP</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>IP Address</span>
+                        <button type="button" class="copy-button" name="ip">复制</button>
+                    </div>
+                    <p id="ip" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-ip_port">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupIpPort">IP_PORT</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>IP & Port</span>
+                        <button class="copy-button" name="ip_port">复制</button>
+                    </div>
+                    <p id="ip_port" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-incomplete_path">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupIncompletePath">IncompletePath</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>Incomplete Path</span>
+                        <button class="copy-button" name="incomplete_path">复制</button>
+                    </div>
+                    <p id="incomplete_path" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-static">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupStaticPath">StaticUrl</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>Static URL</span>
+                        <button class="copy-button" name="static">复制</button>
+                    </div>
+                    <p id="static" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-sfz">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupSfz">身份证</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>ID Card</span>
+                        <button class="copy-button" name="sfz">复制</button>
+                    </div>
+                    <p id="sfz" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-mobile">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupMobile">手机号</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>Mobile Number</span>
+                        <button class="copy-button" name="mobile">复制</button>
+                    </div>
+                    <p id="mobile" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-mail">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupMail">邮箱</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>Email Address</span>
+                        <button class="copy-button" name="mail">复制</button>
+                    </div>
+                    <p id="mail" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-jwt">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupJwt">JWT</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>JSON Web Token</span>
+                        <button class="copy-button" name="jwt">复制</button>
+                    </div>
+                    <p id="jwt" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-algorithm">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupAlgorithm">算法</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>Algorithm</span>
+                        <button class="copy-button" name="algorithm">复制</button>
+                    </div>
+                    <p id="algorithm" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="card-secret">
+                <div class="info-card-header">
+                    <span class="info-card-title" id="popupSecret">Secret</span>
+                </div>
+                <div class="info-card-content">
+                    <div class="content-label">
+                        <span>Secret Key</span>
+                        <button class="copy-button" name="secret">复制</button>
+                    </div>
+                    <p id="secret" class="data-display no-data">🈚️</p>
+                </div>
+            </div>
         </div>
-        <div style="width: 480px; height: 800px; float: left; margin-left:16px;">
-            <div class="findsomething_title" id="popupPath">Path</div><button id="path_button" class="copy" name="path">复制</button><button id="popupCopyurl" class="copy" name="path">复制URL</button>
-            <p id="path" style="">🈚️</p>
-            <div class="findsomething_title" id="popupIncompletePath">IncompletePath</div><button class="copy" name="incomplete_path">复制</button>
-            <p id="incomplete_path" style="">🈚️</p>
-            <div class="findsomething_title" id="popupUrl">Url</div><button class="copy" name="url">复制</button>
-            <p id="url" style="">🈚️</p>
-            <div class="findsomething_title" id="popupStaticPath">StaticUrl</div><button class="copy" name="static">复制</button>
-            <p id="static" style="">🈚️</p>
+
+        <div id="settings-content" style="display: none;">
+            <h3>插件配置</h3>
+            <label for="setting1">设置项 1:</label>
+            <input type="text" id="setting1" value="默认值 1">
+
+            <label for="setting2">设置项 2:</label>
+            <input type="number" id="setting2" value="123">
+
+            <label for="notes">备注:</label>
+            <textarea id="notes">这里可以添加一些备注信息。</textarea>
+
+            <button id="saveSettings">保存配置</button>
         </div>
-</div>
+    </div>
 </body>
-<!-- <script src="jquery-3.6.0.min.js"></script> -->
-<script src="popup.js"> </script>
-<style type="text/css">
-    .copy {
-        border-style: none;
-        background-color: #ffffff;
-        float: right;
-        margin-right: 16px;
-        
-    }
-    .findsomething_title {
-        font-size: 16px;
-        font-weight: bold;
-        border-left: 4px solid black;
-        text-indent: 4px;
-        height: 16px;
-        line-height: 16px;
-    }
-    .tips {
-        display: inline-block;
-        border-top: 0.2px solid;
-        border-right: 0.2px solid;
-        width: 10px;
-        height: 10px;
-        border-color: #EA6000;
-        transform: rotate(-135deg);
-    }
-    a{
-        text-decoration:none;
-        color:#333;
-    }
-    button{
-        cursor: pointer
-    }
-</style>
+<script src="popup.js"></script>
 </html>

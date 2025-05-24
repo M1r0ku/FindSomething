@@ -1,3 +1,5 @@
+// @Date    : 2025-05-25 12:00:00
+// @Author  : residuallaugh / M1r0ku
 
 function setTextContentById(id){
     document.getElementById(id).textContent = chrome.i18n.getMessage(id);
