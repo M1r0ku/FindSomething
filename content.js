@@ -1,4 +1,4 @@
-// @Date    : 2025-05-25 12:00:00
+// @Date    : 2026-03-30 16:00:00
 // @Author  : residuallaugh / M1r0ku
 
 (function(){
@@ -196,7 +196,7 @@ chrome.storage.local.get(["global_float"], function(settings){
                 color: #555; /* Softer color for status text */
                 font-size: 15px;
             "></findsomething-div>
-            <findsomething-div style="
+            <findsomething-div id="findsomething-hide-btn" style="
                 cursor: pointer;
                 margin-top: 0px; /* Adjust top margin for better alignment */
                 margin-right: 0px; /* Adjust right margin for better alignment */
@@ -205,7 +205,7 @@ chrome.storage.local.get(["global_float"], function(settings){
                 padding: 5px 10px; /* Padding for click area */
                 border-radius: 5px; /* Slightly rounded button */
                 transition: background-color 0.2s ease, color 0.2s ease;
-            " onclick='(function(){document.getElementById("findsomething-float-div").removeChild(document.getElementById("findsomething_neko"));})()'>隐藏</findsomething-div>
+            ">隐藏</findsomething-div>
         </findsomething-div>
 
         <findsomething-div style="
@@ -372,6 +372,15 @@ chrome.storage.local.get(["global_float"], function(settings){
     `
     body.appendChild(div)
     
+    const hideBtn = document.getElementById('findsomething-hide-btn');
+    if (hideBtn) {
+        hideBtn.addEventListener('click', function () {
+            const floatDiv = document.getElementById('findsomething-float-div');
+            if (floatDiv) {
+                floatDiv.style.display = 'none';   // 或 floatDiv.remove(); 根据你原来的 onclick 逻辑调整
+            }
+        });
+    }
     var neko = document.querySelector('#findsomething_neko');
     var nekoW = neko.offsetWidth;
     var nekoH = neko.offsetHeight;

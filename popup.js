@@ -1,4 +1,4 @@
-// @Date    : 2025-05-25 12:00:00
+// @Date    : 2026-03-30 16:00:00
 // @Author  : residuallaugh / M1r0ku
 
 function setTextContentById(id){
@@ -23,7 +23,7 @@ function init_locales() {
         "popupIncompletePath",
         "popupUrl",
         "popupStaticPath",
-        "Peizhi" // Add Peizhi here for text
+        "Peizhi"
     ];
 
     for (const id of popupIdList) {
@@ -37,7 +37,6 @@ function init_locales() {
 
 init_locales();
 
-// Note: The 'key' array now directly corresponds to the data-category attributes and card IDs.
 var key = ["ip","ip_port","domain","path","incomplete_path","url","static","sfz","mobile","mail","jwt","algorithm","secret"];
 
 function init_copy() {
@@ -61,16 +60,25 @@ function init_copy() {
                             return;
                         }
                         var url = new URL(tab.url);
-                        var path_list = copytext.split('\n').filter(line => line.trim() !== '🈚️' && line.trim() !== '');
+                        var path_list = copytext.split('\n').filter(line => line.trim() !== 'No data' && line.trim() !== '');
                         copytext = "";
                         for (var i = 0; i < path_list.length; i++) {
-                            if(path_list[i].startsWith('/')){
-                                copytext += url.origin + path_list[i] + '\n';
-                            } else {
-                                const currentPath = url.pathname;
-                                const lastSlashIndex = currentPath.lastIndexOf('/');
-                                const basePath = (lastSlashIndex !== -1) ? currentPath.substring(0, lastSlashIndex + 1) : '/';
-                                copytext += url.origin + basePath + path_list[i] + '\n';
+                            let item = path_list[i].trim();
+                            if (!item) continue;
+                            try {
+                                const resolvedUrl = new URL(item, tab.url);
+                                copytext += resolvedUrl.href + '\n';
+                            } catch (e) {
+                                console.warn(`路径解析失败: ${item}`, e);
+                                // fallback（兼容旧逻辑）
+                                if(item.startsWith('/')){
+                                    copytext += url.origin + item + '\n';
+                                } else {
+                                    const currentPath = url.pathname;
+                                    const lastSlashIndex = currentPath.lastIndexOf('/');
+                                    const basePath = (lastSlashIndex !== -1) ? currentPath.substring(0, lastSlashIndex + 1) : '/';
+                                    copytext += url.origin + basePath + item + '\n';
+                                }
                             }
                         }
                         inp.value = copytext.slice(0, -1);
@@ -79,7 +87,7 @@ function init_copy() {
                     })]).then(res=> inp.remove());
                     return ;
                 }
-                if (copytext === '🈚️') {
+                if (copytext === 'No data') {
                     inp.remove();
                     return;
                 }
@@ -102,11 +110,13 @@ function show_info(result_data) {
     for (var k in key){
         let currentKey = key[k];
         let container = document.getElementById(currentKey);
+        if (!container) {
+            continue;
+        }
         // Clear existing content
         while(container.firstChild){
             container.firstChild.remove();
         }
-
         if (result_data && result_data[currentKey] && result_data[currentKey].length > 0){
             container.classList.remove('no-data');
             for (var i in result_data[currentKey]){
@@ -117,11 +127,10 @@ function show_info(result_data) {
                     link.setAttribute("href", source);
                     link.setAttribute("title", source);
                     link.setAttribute("target", "_blank");
+                    link.setAttribute("rel", "noopener noreferrer");
                 }
-
                 let span = document.createElement("span");
                 span.textContent = itemText;
-
                 if (source) {
                     let tips = document.createElement("div");
                     tips.setAttribute("class", "tips");
@@ -154,11 +163,9 @@ function handleCategoryClick(event) {
 
     const selectedCategory = event.currentTarget.dataset.category;
     const infoCardsContainer = document.getElementById('info-cards-container');
-    const settingsContent = document.getElementById('settings-content');
 
-    // Hide all info cards and settings content initially
-    infoCardsContainer.style.display = 'block'; // Ensure container is visible
-    settingsContent.style.display = 'none';
+    // Hide all info cards initially
+    infoCardsContainer.style.display = 'block';
 
     document.querySelectorAll('.info-card').forEach(card => {
         if (card.id === `card-${selectedCategory}`) {
@@ -196,7 +203,6 @@ function init_category_navigation() {
         });
     }
 }
-
 
 getCurrentTab().then(function get_info(tab) {
     if (!tab || !tab.url) {

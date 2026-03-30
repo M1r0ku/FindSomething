@@ -1,5 +1,5 @@
 <!--  
-@Date    : 2025-05-25 12:00:00
+@Date    : 2026-03-30 16:00:00
 @Author  : residuallaugh / M1r0ku
 -->
 
@@ -212,55 +212,6 @@
             padding-bottom: 0;
         }
 
-        #settings-content {
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            height: calc(100% - 40px);
-            box-sizing: border-box;
-            display: none; /* Hidden by default, shown when '配置' is active via JS for this page */
-        }
-        #settings-content h3 {
-            margin-top: 0;
-            color: #343a40;
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-        #settings-content label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #555;
-        }
-        #settings-content input[type="text"],
-        #settings-content input[type="number"],
-        #settings-content textarea {
-            width: calc(100% - 24px);
-            padding: 10px 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        #settings-content textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        #settings-content button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 15px;
-            transition: background-color 0.3s ease;
-        }
-        #settings-content button:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 <body>
@@ -461,19 +412,6 @@
             </div>
         </div>
 
-        <div id="settings-content" style="display: none;">
-            <h3>插件配置</h3>
-            <label for="setting1">设置项 1:</label>
-            <input type="text" id="setting1" value="默认值 1">
-
-            <label for="setting2">设置项 2:</label>
-            <input type="number" id="setting2" value="123">
-
-            <label for="notes">备注:</label>
-            <textarea id="notes">这里可以添加一些备注信息。</textarea>
-
-            <button id="saveSettings">保存配置</button>
-        </div>
     </div>
 </body>
 <script src="popup.js"></script>
